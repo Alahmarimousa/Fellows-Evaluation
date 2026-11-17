@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fellow Evaluation 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#ffffff; --ink:#111827; --muted:#6b7280; --line:#e5e7eb;
+    --accent:#1f3a5f; --accent-soft:#e8eef6; --good:#15803d; --wa:#25d366;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:520px;margin:0 auto;padding:20px 16px 48px}
+  header{margin-bottom:16px}
+  .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  h1{font-size:26px;margin:4px 0 2px;font-weight:700;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:14px}
+  .tabs{display:flex;gap:8px;margin:14px 0 18px}
+  .tabs a{flex:1;text-align:center;padding:10px 0;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);text-decoration:none;font-weight:600;font-size:15px}
+  .tabs a.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:14px}
+  .card h2{font-size:15px;margin:0 0 14px;font-weight:600}
+  label.f{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;font-weight:500}
+  input[type=text]{width:100%;font:inherit;font-size:16px;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+  input[type=text]:focus{outline:2px solid var(--accent-soft);border-color:var(--accent)}
+  .domain{padding:14px 0;border-top:1px solid var(--line)}
+  .domain:first-of-type{border-top:none;padding-top:4px}
+  .drow{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+  .dname{font-weight:600;font-size:15px}
+  .dval{font-weight:700;font-size:18px;color:var(--accent);font-variant-numeric:tabular-nums}
+  .dval small{font-weight:500;color:var(--muted);font-size:13px}
+  .chips{display:grid;grid-template-columns:repeat(9,1fr);gap:4px}
+  .chips button{font:inherit;font-size:13px;font-weight:600;padding:9px 0;border:1px solid var(--line);background:#fff;border-radius:8px;color:var(--ink);cursor:pointer;font-variant-numeric:tabular-nums}
+  .chips button.half{color:var(--muted);font-weight:500;font-size:12px;letter-spacing:-.02em}
+  .chips button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .total{display:flex;align-items:center;justify-content:space-between;background:var(--accent-soft);border-radius:12px;padding:14px 16px;margin-top:14px}
+  .total span{font-size:14px;color:var(--accent);font-weight:600}
+  .total b{font-size:28px;color:var(--accent);font-variant-numeric:tabular-nums}
+  .total b small{font-size:15px;font-weight:600}
+  .btns{display:grid;gap:8px;margin-top:14px}
+  .btn{display:block;width:100%;text-align:center;font:inherit;font-weight:600;font-size:15px;padding:13px;border-radius:11px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;text-decoration:none}
+  .btn.wa{background:var(--wa);border-color:var(--wa);color:#fff}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn:disabled{opacity:.5;cursor:default}
+  .note{font-size:13px;color:var(--muted);margin-top:10px;min-height:1em}
+  .note.ok{color:var(--good)}
+  .hint{font-size:13px;color:var(--muted);margin:-6px 0 12px}
+  table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600;text-align:center;padding:6px 2px;border-bottom:1px solid var(--line)}
+  th:first-child,td:first-child{text-align:left}
+  td{text-align:center;padding:9px 2px;border-bottom:1px solid var(--line)}
+  td.avg{font-weight:700;color:var(--accent)}
+  tr.mean td{font-weight:700;border-bottom:none;background:#fafbfc}
+  .del{border:none;background:none;color:#9ca3af;font-size:16px;cursor:pointer;padding:0 4px}
+  .final{text-align:center;padding:8px 0 4px}
+  .final .num{font-size:44px;font-weight:700;color:var(--accent);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .final .num small{font-size:20px;color:var(--muted);font-weight:600}
+  .final .cap{font-size:13px;color:var(--muted)}
+  .empty{color:var(--muted);font-size:14px;text-align:center;padding:10px 0}
+  .pick{display:grid;gap:10px;margin-top:8px}
+  .pick a{display:flex;justify-content:space-between;align-items:center;padding:18px;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);color:var(--ink);text-decoration:none;font-weight:600;font-size:17px}
+  .pick a span{color:var(--muted);font-weight:500;font-size:14px}
+  .who{display:flex;flex-wrap:wrap;gap:6px}
+  .who button{font:inherit;font-size:14px;font-weight:600;padding:9px 12px;border:1px solid var(--line);background:#fff;border-radius:999px;color:var(--ink);cursor:pointer}
+  .who button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .who button .tick{color:var(--good);margin-left:4px}
+  .who button.on .tick{color:#bbf7d0}
+  td.pending{color:#9ca3af;font-style:italic;text-align:center}
+  .progress{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin:10px auto 0;max-width:220px}
+  .progress i{display:block;height:100%;background:var(--accent)}
+  .hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Pediatric Orthopedics · KFSHRC</div>
+    <h1 id="title">Fellow Evaluation 2026</h1>
+    <div class="sub" id="subtitle">Rate each domain out of 5</div>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <a href="#nouf" data-f="nouf">Nouf</a>
+    <a href="#muhammad" data-f="muhammad">Muhammad</a>
+  </nav>
+
+  <section id="start" class="hidden">
+    <div class="pick">
+      <a href="#nouf">Nouf <span>Rate →</span></a>
+      <a href="#muhammad">Muhammad <span>Rate →</span></a>
+    </div>
+  </section>
+
+  <section id="main" class="hidden">
+    <div class="card">
+      <h2>Your rating</h2>
+      <label class="f">Consultant</label>
+      <div class="who" id="who"></div>
+      <div style="height:14px"></div>
+      <div id="domains"></div>
+      <div class="total"><span>Your average</span><b id="avg">–<small> / 5</small></b></div>
+      <div class="btns">
+        <button class="btn primary" id="saveBtn" type="button">Save my scores</button>
+      </div>
+      <div class="note" id="note"></div>
+    </div>
+
+    <div class="card hidden" id="tallyCard">
+      <h2>Group tally</h2>
+      <p class="hint">Final score = average of all 5 consultants, shown once everyone has rated.</p>
+      <div class="final" id="finalBox"></div>
+      <div id="tally"></div>
+      <div class="btns" id="finalBtns">
+        <a class="btn wa" id="waFinal" href="#" target="_blank" rel="noopener">Send final score to WhatsApp</a>
+      </div>
+      <div class="btns"><button class="btn" id="refreshBtn" type="button">Refresh</button></div>
+      <div class="note" id="tallyNote"></div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  const STORE = "https://api.restful-api.dev/objects/ff808181a09d98f701a1e9149ff97300";
+  const STORE_NAME = "kfshrc-peds-ortho-fellow-eval-2026";
+  const FELLOWS = { nouf: "Nouf", muhammad: "Muhammad" };
+  const CONSULTANTS = [
+    { k: "nezar",  n: "Dr. Nezar" },
+    { k: "thamer", n: "Dr. Thamer" },
+    { k: "talal",  n: "Dr. Talal" },
+    { k: "mousa",  n: "Dr. Mousa" },
+    { k: "hind",   n: "Dr. Hind" }
+  ];
+  const DOMAINS = [
+    { k: "knowledge", n: "Knowledge", s: "Kn" },
+    { k: "communication", n: "Communication", s: "Com" },
+    { k: "punctuality", n: "Punctuality", s: "Pun" },
+    { k: "skills", n: "Skills", s: "Sk" }
+  ];
+  const STEPS = [1,1.5,2,2.5,3,3.5,4,4.5,5];
+
+  let fellow = null, who = null, scores = {};
+  let all = null;            // whole store data: {nouf:{consultant:{...}}, muhammad:{...}}
+  let saving = false;
+
+  const $ = id => document.getElementById(id);
+  const fmt = n => (Math.round(n * 100) / 100).toString();
+  const cName = k => (CONSULTANTS.find(c => c.k === k) || {}).n || k;
+  const savedFor = () => (all && all[fellow]) || {};
+
+  // ---------- storage ----------
+  async function load(){
+    const r = await fetch(STORE, { cache: "no-store" });
+    if (!r.ok) throw new Error("load " + r.status);
+    const j = await r.json();
+    return (j && j.data) || {};
+  }
+  async function saveMine(f, c, entry){
+    // re-read right before writing so other consultants' scores are kept
+    const data = await load();
+    data[f] = data[f] || {};
+    data[f][c] = entry;
+    const r = await fetch(STORE, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: STORE_NAME, data })
+    });
+    if (!r.ok) throw new Error("save " + r.status);
+    const j = await r.json();
+    return (j && j.data) || data;
+  }
+
+  async function refresh(){
+    $("tallyNote").textContent = "";
+    try {
+      all = await load();
+      if (who && !Object.keys(scores).length) loadSavedInto();
+      renderWho(); renderForm(); renderTally();
+    } catch(e){
+      $("tallyNote").textContent = "Couldn't load scores. Check your connection and tap Refresh.";
+      renderTally();
+    }
+  }
+
+  // ---------- consultant picker ----------
+  function renderWho(){
+    const host = $("who"); host.innerHTML = "";
+    const saved = savedFor();
+    CONSULTANTS.forEach(c => {
+      const b = document.createElement("button");
+      b.type = "button"; b.textContent = c.n;
+      if (saved[c.k]) { const t = document.createElement("span"); t.className = "tick"; t.textContent = "✓"; b.appendChild(t); }
+      b.classList.toggle("on", who === c.k);
+      b.addEventListener("click", () => {
+        who = c.k;
+        try { localStorage.setItem("evalWho", who); } catch(e){}
+        loadSavedInto(); renderWho(); renderForm(); setNote("");
+      });
+      host.appendChild(b);
+    });
+  }
+  function loadSavedInto(){
+    const s = who && savedFor()[who];
+    scores = {};
+    if (s) DOMAINS.forEach(d => { if (typeof s[d.k] === "number") scores[d.k] = s[d.k]; });
+  }
+
+  // ---------- rating form ----------
+  function buildDomains(){
+    const host = $("domains"); host.innerHTML = "";
+    DOMAINS.forEach(d => {
+      const wrap = document.createElement("div"); wrap.className = "domain";
+      const row = document.createElement("div"); row.className = "drow";
+      const nm = document.createElement("div"); nm.className = "dname"; nm.textContent = d.n;
+      const val = document.createElement("div"); val.className = "dval"; val.id = "v_" + d.k;
+      row.append(nm, val);
+      const chips = document.createElement("div"); chips.className = "chips";
+      STEPS.forEach(s => {
+        const b = document.createElement("button"); b.type = "button";
+        b.textContent = s;
+        if (!Number.isInteger(s)) { b.className = "half"; b.setAttribute("aria-label", s); }
+        b.dataset.v = s;
+        b.addEventListener("click", () => { scores[d.k] = s; renderForm(); });
+        chips.appendChild(b);
+      });
+      wrap.append(row, chips); host.appendChild(wrap);
+    });
+  }
+  function average(){
+    const v = DOMAINS.map(d => scores[d.k]).filter(x => typeof x === "number");
+    return v.length === DOMAINS.length ? v.reduce((a,b)=>a+b,0)/v.length : null;
+  }
+  function renderForm(){
+    DOMAINS.forEach((d, i) => {
+      const v = scores[d.k];
+      $("v_" + d.k).innerHTML = v == null ? '<small>tap a score</small>' : v + '<small> / 5</small>';
+      document.querySelectorAll(".domain")[i].querySelectorAll("button")
+        .forEach(b => b.classList.toggle("on", Number(b.dataset.v) === v));
+    });
+    const avg = average();
+    $("avg").innerHTML = (avg == null ? "–" : fmt(avg)) + "<small> / 5</small>";
+    $("saveBtn").disabled = saving || avg == null || !who;
+    $("saveBtn").textContent = saving ? "Saving…" : (who && savedFor()[who] ? "Update my scores" : "Save my scores");
+  }
+  function setNote(t, ok){ const n=$("note"); n.textContent=t||""; n.classList.toggle("ok", !!ok); }
+
+  $("saveBtn").addEventListener("click", async () => {
+    if (!fellow || !who || average() == null || saving) return;
+    saving = true; renderForm(); setNote("");
+    const entry = { at: new Date().toISOString() };
+    DOMAINS.forEach(d => entry[d.k] = scores[d.k]);
+    const f = fellow, c = who;
+    try {
+      all = await saveMine(f, c, entry);
+      setNote("Saved. Thank you, " + cName(c) + ".", true);
+    } catch(e){
+      setNote("Couldn't save. Check your connection and try again.");
+    } finally {
+      saving = false; renderWho(); renderForm(); renderTally();
+    }
+  });
+  $("refreshBtn").addEventListener("click", refresh);
+
+  // ---------- tally ----------
+  function rowAvg(r){
+    const v = DOMAINS.map(d => Number(r[d.k]));
+    return v.some(x => !isFinite(x)) ? null : v.reduce((a,b)=>a+b,0)/v.length;
+  }
+  function renderTally(){
+    const box = $("tally"), fin = $("finalBox");
+    box.innerHTML = ""; fin.innerHTML = "";
+    $("finalBtns").classList.add("hidden");
+    if (!all){ box.innerHTML = '<div class="empty">Loading…</div>'; return; }
+    const saved = savedFor();
+    const done = CONSULTANTS.filter(c => saved[c.k] && rowAvg(saved[c.k]) != null);
+    const n = done.length, total = CONSULTANTS.length;
+
+    const tbl = document.createElement("table");
+    const head = document.createElement("tr");
+    ["Consultant", ...DOMAINS.map(d => d.s), "Avg"].forEach(t => { const th=document.createElement("th"); th.textContent=t; head.appendChild(th); });
+    tbl.appendChild(head);
+    const sums = {}; DOMAINS.forEach(d => sums[d.k] = 0); let avgSum = 0;
+    CONSULTANTS.forEach(c => {
+      const tr = document.createElement("tr");
+      const c0 = document.createElement("td"); c0.textContent = c.n; tr.appendChild(c0);
+      const r = saved[c.k], a = r ? rowAvg(r) : null;
+      if (a == null){
+        const td = document.createElement("td"); td.colSpan = DOMAINS.length + 1; td.className = "pending"; td.textContent = "pending";
+        tr.appendChild(td);
+      } else {
+        DOMAINS.forEach(d => { sums[d.k] += Number(r[d.k]); const td=document.createElement("td"); td.textContent = r[d.k]; tr.appendChild(td); });
+        avgSum += a;
+        const ca = document.createElement("td"); ca.className = "avg"; ca.textContent = fmt(a); tr.appendChild(ca);
+      }
+      tbl.appendChild(tr);
+    });
+    if (n === total){
+      const mean = document.createElement("tr"); mean.className = "mean";
+      const m0 = document.createElement("td"); m0.textContent = "Mean"; mean.appendChild(m0);
+      DOMAINS.forEach(d => { const td=document.createElement("td"); td.textContent = fmt(sums[d.k]/n); mean.appendChild(td); });
+      const ma = document.createElement("td"); ma.className = "avg"; ma.textContent = fmt(avgSum/n); mean.appendChild(ma);
+      tbl.appendChild(mean);
+    }
+    box.appendChild(tbl);
+
+    if (n < total){
+      const pending = CONSULTANTS.filter(c => !done.includes(c)).map(c => c.n).join(", ");
+      fin.innerHTML = '<div class="num">' + n + '<small> / ' + total + ' rated</small></div>' +
+        '<div class="progress"><i style="width:' + (n/total*100) + '%"></i></div>' +
+        '<div class="cap" style="margin-top:8px">Waiting for ' + pending + '</div>';
+      return;
+    }
+    const final = avgSum / n;
+    fin.innerHTML = '<div class="num">' + fmt(final) + '<small> / 5</small></div><div class="cap">Final score · all ' + n + ' consultants</div>';
+    const txt = [
+      FELLOWS[fellow] + " – Final fellow evaluation 2026",
+      ...DOMAINS.map(d => d.n + ": " + fmt(sums[d.k]/n) + "/5"),
+      "Final score: " + fmt(final) + "/5 (all " + n + " consultants)"
+    ].join("\n");
+    $("waFinal").href = "https://wa.me/?text=" + encodeURIComponent(txt);
+    $("finalBtns").classList.remove("hidden");
+  }
+
+  // ---------- routing ----------
+  function route(){
+    const h = (location.hash || "").replace("#","").toLowerCase();
+    const f = FELLOWS[h] ? h : null;
+    document.querySelectorAll("#tabs a").forEach(a => a.classList.toggle("on", a.dataset.f === f));
+    if (!f){
+      fellow = null;
+      $("start").classList.remove("hidden"); $("main").classList.add("hidden");
+      $("title").textContent = "Fellow Evaluation 2026";
+      $("subtitle").textContent = "Choose a fellow to rate";
+      return;
+    }
+    fellow = f; loadSavedInto();
+    $("start").classList.add("hidden"); $("main").classList.remove("hidden");
+    $("title").textContent = FELLOWS[f];
+    $("subtitle").textContent = "Fellow evaluation 2026 · rate each domain out of 5";
+    setNote(""); renderWho(); renderForm(); renderTally();
+  }
+  window.addEventListener("hashchange", route);
+
+  try { const s = localStorage.getItem("evalWho"); if (CONSULTANTS.some(c => c.k === s)) who = s; } catch(e){}
+  buildDomains();
+  route();
+  refresh();
+})();
+</script>
+</body>
+</html>
