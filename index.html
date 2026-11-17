@@ -109,7 +109,7 @@
       <div class="note" id="note"></div>
     </div>
 
-    <div class="card hidden" id="tallyCard">
+    <div class="card" id="tallyCard">
       <h2>Group tally</h2>
       <p class="hint">Final score = average of all 5 consultants, shown once everyone has rated.</p>
       <div class="final" id="finalBox"></div>
@@ -153,25 +153,51 @@
   const savedFor = () => (all && all[fellow]) || {};
 
   // ---------- storage ----------
-  async function load(){
+  // Stored compactly: data[fellow][consultant] = [knowledge, communication, punctuality, skills, savedAt]
+  // (the free store rejects objects with too many named fields)
+  function toArr(e){ return Array.isArray(e) ? e : [e.knowledge, e.communication, e.punctuality, e.skills, e.at || ""]; }
+  function toObj(a){ const o = { at: a[4] || "" }; DOMAINS.forEach((d,i) => o[d.k] = Number(a[i])); return o; }
+  async function fetchRaw(){
     const r = await fetch(STORE, { cache: "no-store" });
     if (!r.ok) throw new Error("load " + r.status);
     const j = await r.json();
-    return (j && j.data) || {};
+    const raw = (j && j.data) || {};
+    const out = {};
+    Object.keys(raw).forEach(f => { out[f] = {}; Object.keys(raw[f] || {}).forEach(c => { out[f][c] = toArr(raw[f][c]); }); });
+    return out;
   }
-  async function saveMine(f, c, entry){
-    // re-read right before writing so other consultants' scores are kept
-    const data = await load();
-    data[f] = data[f] || {};
-    data[f][c] = entry;
+  function view(raw){
+    const out = {};
+    Object.keys(raw).forEach(f => { out[f] = {}; Object.keys(raw[f]).forEach(c => out[f][c] = toObj(raw[f][c])); });
+    return out;
+  }
+  async function load(){ return view(await fetchRaw()); }
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+  async function putMerged(f, c, arr){
+    const raw = await fetchRaw();            // re-read so other consultants' scores are kept
+    raw[f] = raw[f] || {};
+    raw[f][c] = arr;
     const r = await fetch(STORE, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: STORE_NAME, data })
+      body: JSON.stringify({ name: STORE_NAME, data: raw })
     });
     if (!r.ok) throw new Error("save " + r.status);
-    const j = await r.json();
-    return (j && j.data) || data;
+  }
+  async function saveMine(f, c, entry){
+    const arr = DOMAINS.map(d => entry[d.k]).concat([entry.at]);
+    await putMerged(f, c, arr);
+    // check the save stuck; if someone else saved at the same moment and overwrote it, save again
+    for (let i = 0; i < 3; i++){
+      await sleep(1200 + Math.random() * 1200);
+      const raw = await fetchRaw();
+      if (raw[f] && same(raw[f][c], arr)) return view(raw);
+      await putMerged(f, c, arr);
+    }
+    const raw = await fetchRaw();
+    if (raw[f] && same(raw[f][c], arr)) return view(raw);
+    throw new Error("not confirmed");
   }
 
   async function refresh(){
@@ -244,7 +270,7 @@
     const avg = average();
     $("avg").innerHTML = (avg == null ? "–" : fmt(avg)) + "<small> / 5</small>";
     $("saveBtn").disabled = saving || avg == null || !who;
-    $("saveBtn").textContent = saving ? "Saving…" : (who && savedFor()[who] ? "Update my scores" : "Save my scores");
+    $("saveBtn").textContent = saving ? "Saving… please wait" : (who && savedFor()[who] ? "Update my scores" : "Save my scores");
   }
   function setNote(t, ok){ const n=$("note"); n.textContent=t||""; n.classList.toggle("ok", !!ok); }
 
